@@ -29,8 +29,8 @@ const sleeveColors: Record<TopVariant, string> = {
       <template v-if="pants === 'long'">
         <rect x="72" y="188" width="22" height="72" rx="11" fill="#b8a9c9" />
         <rect x="106" y="188" width="22" height="72" rx="11" fill="#b8a9c9" />
-        <ellipse cx="83" cy="262" rx="14" ry="8" fill="#f5c6d6" />
-        <ellipse cx="117" cy="262" rx="14" ry="8" fill="#f5c6d6" />
+        <ellipse cx="83" cy="262" rx="13" ry="7" fill="#f0b8c8" />
+        <ellipse cx="117" cy="262" rx="13" ry="7" fill="#f0b8c8" />
         <rect x="68" y="172" width="64" height="24" rx="12" fill="#9b8bb4" />
       </template>
       <template v-else>
@@ -38,8 +38,8 @@ const sleeveColors: Record<TopVariant, string> = {
         <rect x="106" y="188" width="20" height="38" rx="10" fill="#f5c6d6" />
         <rect x="72" y="220" width="22" height="28" rx="11" fill="#ffd4a8" />
         <rect x="106" y="220" width="22" height="28" rx="11" fill="#ffd4a8" />
-        <ellipse cx="83" cy="250" rx="14" ry="8" fill="#f5c6d6" />
-        <ellipse cx="117" cy="250" rx="14" ry="8" fill="#f5c6d6" />
+        <ellipse cx="83" cy="250" rx="13" ry="7" fill="#f0b8c8" />
+        <ellipse cx="117" cy="250" rx="13" ry="7" fill="#f0b8c8" />
         <rect x="68" y="172" width="64" height="28" rx="12" fill="#a8d8ea" />
       </template>
 
@@ -64,7 +64,7 @@ const sleeveColors: Record<TopVariant, string> = {
       <circle cx="145" cy="174" r="12" :fill="top === 'shirt' ? '#f5c6d6' : sleeveColors[top]" />
 
       <!-- Body / top -->
-      <rect x="62" y="118" width="76" height="58" rx="20" :fill="topColors[top]" />
+      <rect x="66" y="118" width="68" height="58" rx="22" :fill="topColors[top]" />
 
       <!-- Sweater detail -->
       <template v-if="top === 'sweater'">
@@ -91,26 +91,50 @@ const sleeveColors: Record<TopVariant, string> = {
       <!-- Head -->
       <circle cx="100" cy="82" r="44" fill="#ffe8d0" />
 
-      <ellipse cx="72" cy="92" rx="10" ry="6" fill="#ffb8c9" opacity="0.6" />
-      <ellipse cx="128" cy="92" rx="10" ry="6" fill="#ffb8c9" opacity="0.6" />
-
-      <circle cx="84" cy="78" r="5" fill="#5a4a5e" />
-      <circle cx="116" cy="78" r="5" fill="#5a4a5e" />
-      <circle cx="86" cy="76" r="1.5" fill="#fff" />
-      <circle cx="118" cy="76" r="1.5" fill="#fff" />
-
+      <!-- Long side hair (behind face) -->
       <path
-        d="M 88 98 Q 100 106 112 98"
+        d="M 58 64 C 50 98 50 138 60 172 L 68 164 C 60 132 60 98 68 68 Z"
+        fill="#9274a0"
+      />
+      <path
+        d="M 142 64 C 150 98 150 138 140 172 L 132 164 C 140 132 140 98 132 68 Z"
+        fill="#9274a0"
+      />
+
+      <ellipse cx="72" cy="92" rx="10" ry="6" fill="#ffb8c9" opacity="0.65" />
+      <ellipse cx="128" cy="92" rx="10" ry="6" fill="#ffb8c9" opacity="0.65" />
+
+      <!-- Eyes with lashes -->
+      <ellipse cx="84" cy="78" rx="6" ry="7" fill="#fff" />
+      <ellipse cx="116" cy="78" rx="6" ry="7" fill="#fff" />
+      <circle cx="85" cy="79" r="4.5" fill="#6b5a6e" />
+      <circle cx="117" cy="79" r="4.5" fill="#6b5a6e" />
+      <circle cx="86.5" cy="77" r="1.8" fill="#fff" />
+      <circle cx="118.5" cy="77" r="1.8" fill="#fff" />
+      <path d="m 74 72 q 2 -4 6 -2" fill="none" stroke="#6b5a6e" stroke-width="1.5" stroke-linecap="round" />
+      <path d="m 86 70 q 4 -2 6 2" fill="none" stroke="#6b5a6e" stroke-width="1.5" stroke-linecap="round" />
+      <path d="m 108 72 q 2 -4 6 -2" fill="none" stroke="#6b5a6e" stroke-width="1.5" stroke-linecap="round" />
+      <path d="m 120 70 q 4 -2 6 2" fill="none" stroke="#6b5a6e" stroke-width="1.5" stroke-linecap="round" />
+
+      <!-- Smile -->
+      <path
+        d="M 90 98 Q 100 108 110 98"
         fill="none"
-        stroke="#5a4a5e"
+        stroke="#c08090"
         stroke-width="2.5"
         stroke-linecap="round"
       />
 
+      <!-- Top hair -->
       <path
-        d="M 58 72 Q 60 28 100 24 Q 140 28 142 72 Q 130 50 100 48 Q 70 50 58 72"
-        fill="#8b6f8e"
+        d="M 54 88 C 52 54 74 32 100 30 126 32 148 54 146 88 140 72 122 64 100 66 78 64 60 72 54 88 Z"
+        fill="#9274a0"
       />
+
+      <!-- Hair bow -->
+      <path d="m 124 40 10 -6 -2 14 z" fill="#f5a8c8" />
+      <path d="m 124 40 -10 -6 2 14 z" fill="#f5a8c8" />
+      <circle cx="124" cy="40" r="4" fill="#e890b0" />
     </svg>
   </div>
 </template>
