@@ -13,8 +13,12 @@ const topColors: Record<TopVariant, string> = {
   sweater: '#d4a8c8',
 }
 
+const skinFace = '#fff2ea'
+const skinBody = '#f5e6dc'
+const hairColor = '#5d4037'
+
 const sleeveColors: Record<TopVariant, string> = {
-  shirt: '#ffd4a8',
+  shirt: skinBody,
   'long-sleeve': '#a8d4e6',
   sweater: '#d4a8c8',
 }
@@ -36,8 +40,8 @@ const sleeveColors: Record<TopVariant, string> = {
       <template v-else>
         <rect x="74" y="188" width="20" height="38" rx="10" fill="#f5c6d6" />
         <rect x="106" y="188" width="20" height="38" rx="10" fill="#f5c6d6" />
-        <rect x="72" y="220" width="22" height="28" rx="11" fill="#ffd4a8" />
-        <rect x="106" y="220" width="22" height="28" rx="11" fill="#ffd4a8" />
+        <rect x="72" y="220" width="22" height="28" rx="11" :fill="skinBody" />
+        <rect x="106" y="220" width="22" height="28" rx="11" :fill="skinBody" />
         <ellipse cx="83" cy="250" rx="13" ry="7" fill="#f0b8c8" />
         <ellipse cx="117" cy="250" rx="13" ry="7" fill="#f0b8c8" />
         <rect x="68" y="172" width="64" height="28" rx="12" fill="#a8d8ea" />
@@ -60,8 +64,8 @@ const sleeveColors: Record<TopVariant, string> = {
         rx="11"
         :fill="sleeveColors[top]"
       />
-      <circle cx="55" cy="174" r="12" :fill="top === 'shirt' ? '#f5c6d6' : sleeveColors[top]" />
-      <circle cx="145" cy="174" r="12" :fill="top === 'shirt' ? '#f5c6d6' : sleeveColors[top]" />
+      <circle cx="55" cy="174" r="12" :fill="top === 'shirt' ? skinBody : sleeveColors[top]" />
+      <circle cx="145" cy="174" r="12" :fill="top === 'shirt' ? skinBody : sleeveColors[top]" />
 
       <!-- Body / top -->
       <rect x="66" y="118" width="68" height="58" rx="22" :fill="topColors[top]" />
@@ -89,16 +93,16 @@ const sleeveColors: Record<TopVariant, string> = {
       </template>
 
       <!-- Head -->
-      <circle cx="100" cy="82" r="44" fill="#ffe8d0" />
+      <circle cx="100" cy="82" r="44" :fill="skinFace" />
 
       <!-- Long side hair (behind face) -->
       <path
         d="M 58 64 C 50 98 50 138 60 172 L 68 164 C 60 132 60 98 68 68 Z"
-        fill="#9274a0"
+        :fill="hairColor"
       />
       <path
         d="M 142 64 C 150 98 150 138 140 172 L 132 164 C 140 132 140 98 132 68 Z"
-        fill="#9274a0"
+        :fill="hairColor"
       />
 
       <ellipse cx="72" cy="92" rx="10" ry="6" fill="#ffb8c9" opacity="0.65" />
@@ -128,7 +132,7 @@ const sleeveColors: Record<TopVariant, string> = {
       <!-- Top hair -->
       <path
         d="M 54 88 C 52 54 74 32 100 30 126 32 148 54 146 88 140 72 122 64 100 66 78 64 60 72 54 88 Z"
-        fill="#9274a0"
+        :fill="hairColor"
       />
 
       <!-- Hair bow -->
