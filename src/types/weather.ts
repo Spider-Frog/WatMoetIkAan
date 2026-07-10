@@ -20,11 +20,15 @@ export interface OpenMeteoResponse {
   }
 }
 
+export type TopVariant = 'shirt' | 'long-sleeve' | 'sweater'
 export type PantsVariant = 'long' | 'short'
+export type JacketVariant = 'yes' | 'no'
 
 export type ReasonTag = 'warm' | 'vochtig' | 'winderig' | 'zonnig' | 'fris' | 'bewolkt'
 
-export interface PantsDecision {
-  variant: PantsVariant
+export interface OutfitDecision {
+  top: TopVariant
+  pants: PantsVariant
+  jacket: JacketVariant
   reasons: ReasonTag[]
 }
