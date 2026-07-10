@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import type { OpenMeteoResponse, WeatherConditions } from '../types/weather'
+import { summarizeRainThunder } from '../utils/weatherSummary'
 
 export function useWeather() {
   const weather = ref<WeatherConditions | null>(null)
@@ -23,6 +24,8 @@ export function useWeather() {
         'is_day',
         'cloud_cover',
       ].join(','),
+      hourly: 'precipitation_probability,weather_code',
+      forecast_hours: '12',
       timezone: 'auto',
     })
 
@@ -35,6 +38,10 @@ export function useWeather() {
 
       const data = (await response.json()) as OpenMeteoResponse
       const current = data.current
+      const { rainChance, thunderChance } = summarizeRainThunder(
+        data.hourly.precipitation_probability,
+        data.hourly.weather_code,
+      )
 
       weather.value = {
         temperature: current.temperature_2m,
@@ -44,6 +51,8 @@ export function useWeather() {
         uvIndex: current.uv_index,
         isDay: current.is_day === 1,
         cloudCover: current.cloud_cover,
+        rainChance,
+        thunderChance,
       }
     } catch {
       error.value = 'Kon het weer niet ophalen. Probeer het opnieuw.'

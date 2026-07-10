@@ -6,6 +6,8 @@ export interface WeatherConditions {
   uvIndex: number
   isDay: boolean
   cloudCover: number
+  rainChance: number
+  thunderChance: number
 }
 
 export interface OpenMeteoResponse {
@@ -17,6 +19,11 @@ export interface OpenMeteoResponse {
     uv_index: number
     is_day: number
     cloud_cover: number
+  }
+  hourly: {
+    time: string[]
+    precipitation_probability: number[]
+    weather_code: number[]
   }
 }
 

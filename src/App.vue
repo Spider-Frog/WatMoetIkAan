@@ -12,6 +12,7 @@ import {
   REASON_LABELS,
   TOP_LABELS,
 } from './utils/outfitDecision'
+import { formatRainThunderText } from './utils/weatherSummary'
 import type { GeocodingResult } from './types/location'
 
 const geo = useGeolocation()
@@ -46,6 +47,11 @@ const warmthClass = computed(() => {
   if (t >= 22) return 'warm'
   if (t >= 15) return 'mild'
   return 'cool'
+})
+
+const rainThunderText = computed(() => {
+  if (!weather.value) return null
+  return formatRainThunderText(weather.value.rainChance, weather.value.thunderChance)
 })
 
 function formatPlace(result: GeocodingResult): string {
@@ -165,6 +171,7 @@ onMounted(async () => {
         </ul>
 
         <p class="feels-like">Voelt als {{ Math.round(weather.feelsLike) }}°C</p>
+        <p v-if="rainThunderText" class="weather-detail">{{ rainThunderText }}</p>
         <p v-if="activeLocationName" class="location-name">{{ activeLocationName }}</p>
 
         <div v-if="decision.reasons.length" class="chips">
@@ -299,8 +306,15 @@ body {
   font-weight: 600;
 }
 
+.weather-detail {
+  margin: -0.35rem 0 0;
+  font-size: 0.85rem;
+  color: #b0a0b4;
+  font-weight: 600;
+}
+
 .location-name {
-  margin: -0.5rem 0 0;
+  margin: -0.35rem 0 0;
   font-size: 0.85rem;
   color: #b0a0b4;
   font-weight: 600;
