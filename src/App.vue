@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import LocationPicker from './components/LocationPicker.vue'
-import PantsCharacter from './components/PantsCharacter.vue'
+import OutfitCharacter from './components/OutfitCharacter.vue'
 import { useGeolocation } from './composables/useGeolocation'
 import { useSavedLocation } from './composables/useSavedLocation'
 import { useWeather } from './composables/useWeather'
-import { decidePants, REASON_LABELS } from './utils/pantsDecision'
+import {
+  decideOutfit,
+  JACKET_LABELS,
+  PANTS_LABELS,
+  REASON_LABELS,
+  TOP_LABELS,
+} from './utils/outfitDecision'
 import type { GeocodingResult } from './types/location'
 
 const geo = useGeolocation()
-const { savedLocation, loadSavedLocation, saveLocation } = useSavedLocation()
+const { loadSavedLocation, saveLocation } = useSavedLocation()
 const { weather, error: weatherError, loading: weatherLoading, fetchWeather } = useWeather()
 
 const activeLocationName = ref<string | null>(null)
@@ -31,7 +37,15 @@ const errorMessage = computed(() => {
 
 const decision = computed(() => {
   if (!weather.value) return null
-  return decidePants(weather.value)
+  return decideOutfit(weather.value)
+})
+
+const warmthClass = computed(() => {
+  if (!weather.value) return ''
+  const t = weather.value.feelsLike
+  if (t >= 22) return 'warm'
+  if (t >= 15) return 'mild'
+  return 'cool'
 })
 
 function formatPlace(result: GeocodingResult): string {
@@ -103,24 +117,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="page" :class="{ long: decision?.variant === 'long', short: decision?.variant === 'short' }">
+  <main class="page" :class="warmthClass">
     <div class="card">
-      <h1 class="title">Lange broek aan?</h1>
+      <h1 class="title">Wat moet ik aan?</h1>
 
-      <!-- Loading -->
       <div v-if="isLoading" class="state loading-state">
         <div class="spinner" aria-hidden="true" />
         <p class="state-text">Even kijken…</p>
       </div>
 
-      <!-- Error (weather API only — geo errors show picker below) -->
       <div v-else-if="errorMessage" class="state error-state">
         <p class="state-text">{{ errorMessage }}</p>
         <button class="btn" type="button" @click="checkWeatherWithGeolocation">Opnieuw proberen</button>
         <LocationPicker @select="handleManualSelect" />
       </div>
 
-      <!-- Geo failed / manual location picker -->
       <div v-else-if="showLocationPicker && !decision" class="state picker-state">
         <p v-if="geo.error" class="state-text">{{ geo.error }}</p>
         <p v-else class="state-text">Waar wil je het weer voor checken?</p>
@@ -135,13 +146,23 @@ onMounted(async () => {
         </button>
       </div>
 
-      <!-- Result -->
       <div v-else-if="decision && weather" class="state result-state">
-        <p class="verdict" :class="decision.variant">
-          {{ decision.variant === 'long' ? 'Ja, lange broek!' : 'Nee, korte broek vandaag!' }}
-        </p>
+        <OutfitCharacter :top="decision.top" :pants="decision.pants" :jacket="decision.jacket" />
 
-        <PantsCharacter :variant="decision.variant" />
+        <ul class="outfit-list">
+          <li>
+            <span class="outfit-label">Bovenkant</span>
+            <span class="outfit-value">{{ TOP_LABELS[decision.top] }}</span>
+          </li>
+          <li>
+            <span class="outfit-label">Broek</span>
+            <span class="outfit-value">{{ PANTS_LABELS[decision.pants] }}</span>
+          </li>
+          <li>
+            <span class="outfit-label">Jas</span>
+            <span class="outfit-value">{{ JACKET_LABELS[decision.jacket] }}</span>
+          </li>
+        </ul>
 
         <p class="feels-like">Voelt als {{ Math.round(weather.feelsLike) }}°C</p>
         <p v-if="activeLocationName" class="location-name">{{ activeLocationName }}</p>
@@ -191,17 +212,21 @@ body {
   transition: background 0.6s ease;
 }
 
-.page.long {
-  background: linear-gradient(160deg, #fff8f0 0%, #e8f5ee 50%, #dceef5 100%);
+.page.cool {
+  background: linear-gradient(160deg, #fff8f0 0%, #e8f0f8 50%, #dce8f5 100%);
 }
 
-.page.short {
+.page.mild {
+  background: linear-gradient(160deg, #fff8f0 0%, #f0e8f5 50%, #e8f4f0 100%);
+}
+
+.page.warm {
   background: linear-gradient(160deg, #fff8f0 0%, #fce8e0 50%, #fff0e8 100%);
 }
 
 .card {
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
   border-radius: 28px;
@@ -211,7 +236,7 @@ body {
 }
 
 .title {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.25rem;
   font-size: 1.6rem;
   font-weight: 800;
   color: #6b5a6e;
@@ -232,19 +257,39 @@ body {
   line-height: 1.5;
 }
 
-.verdict {
+.outfit-list {
+  list-style: none;
   margin: 0;
-  font-size: 1.5rem;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.outfit-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  background: #faf5fa;
+  border-radius: 16px;
+  gap: 0.75rem;
+}
+
+.outfit-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #b0a0b4;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.outfit-value {
+  font-size: 1rem;
   font-weight: 800;
-  line-height: 1.3;
-}
-
-.verdict.long {
-  color: #5a9e7a;
-}
-
-.verdict.short {
-  color: #d4846a;
+  color: #6b5a6e;
+  text-align: right;
 }
 
 .feels-like {
